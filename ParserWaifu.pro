@@ -45,5 +45,8 @@ FORMS += \
         src/ui/mainwindow.ui \
     src/ui/about.ui
 
+# internal lib
+include(lib/lib.pri)
+
 # third party stuff
 include(3pp/3pp.pri)

@@ -1,10 +1,6 @@
 #ifndef TINYTOML_H_
 #define TINYTOML_H_
 
-#if defined(_MSC_VER)
-#pragma warning(disable:4996)
-#endif
-
 #include <algorithm>
 #include <cassert>
 #include <cctype>
@@ -22,6 +18,11 @@
 #include <memory>
 #include <utility>
 #include <vector>
+
+#if defined(_MSC_VER)
+#undef sscanf
+#define sscanf sscanf_s
+#endif
 
 namespace toml {
 
@@ -888,8 +889,13 @@ inline Token Lexer::parseAsTime(const std::string& str)
     // [+/-]%d:%d
     char pn;
     int oh, om;
+#if defined(_MSC_VER)
+    if (sscanf(s, "%c%d:%d", &pn, static_cast<unsigned>(sizeof(pn)), &oh, &om) != 3)
+        return Token(TokenType::ERROR, std::string("Invalid token"));
+#else
     if (sscanf(s, "%c%d:%d", &pn, &oh, &om) != 3)
         return Token(TokenType::ERROR, std::string("Invalid token"));
+#endif
 
     if (pn != '+' && pn != '-')
         return Token(TokenType::ERROR, std::string("Invalid token"));
@@ -1301,7 +1307,7 @@ inline void Value::write(std::ostream* os, const std::string& keyPrefix, int ind
         std::tm t;
         gmtime_r(&tt, &t);
         char buf[256];
-        sprintf(buf, "%04d-%02d-%02dT%02d:%02d:%02dZ", t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
+        snprintf(buf, sizeof(buf), "%04d-%02d-%02dT%02d:%02d:%02dZ", t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec);
         (*os) << buf;
         break;
     }

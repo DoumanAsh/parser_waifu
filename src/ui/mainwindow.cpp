@@ -1,6 +1,8 @@
 #include <QGuiApplication>
 #include <QMimeData>
 
+#include "utils.hpp"
+
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 
@@ -13,7 +15,11 @@ void MainWindow::clipboard_change() {
     auto mime = this->clipboard->mimeData();
 
     if (mime->hasText()) {
-        this->ui->original_text->setText(mime->text());
+        auto text = mime->text();
+
+        if (utils::is_jp(text.toStdWString())) {
+            this->ui->original_text->setText(text);
+        }
     }
 }
 
