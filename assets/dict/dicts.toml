@@ -1,0 +1,8 @@
+[JMdict]
+download_url = "http://ftp.monash.edu.au/pub/nihongo/JMdict_e.gz"
+
+[JMnedict]
+download_url = "http://ftp.monash.edu.au/pub/nihongo/JMnedict.xml.gz"
+
+[kanjidic2]
+download_url = "http://www.edrdg.org/kanjidic/kanjidic2.xml.gz"
