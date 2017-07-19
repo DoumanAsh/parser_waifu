@@ -1,5 +1,7 @@
 #include <stdexcept>
 
+#include <iostream>
+
 #include "parser.hpp"
 
 using namespace parser;

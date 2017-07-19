@@ -8,9 +8,7 @@ using namespace ::testing;
 
 TEST(LibParser, ShouldMecabParse) {
     Mecab mecab;
-    //TODO: On windows it should be L"" due to encoding of char*
-    const std::string str("かわいい");
+    const std::string str(u8"かわいい");
 
-    const auto result = mecab.parse(str);
-    std::cout  << result << std::endl;
+    mecab.parse(str);
 }

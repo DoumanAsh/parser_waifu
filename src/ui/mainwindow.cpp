@@ -2,6 +2,7 @@
 #include <QMimeData>
 
 #include "utils.hpp"
+#include "parser.hpp"
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
@@ -17,8 +18,13 @@ void MainWindow::clipboard_change() {
     if (mime->hasText()) {
         auto text = mime->text();
 
-        if (utils::is_jp(text.toStdWString())) {
+        auto std_string = text.toStdString();
+        if (utils::is_jp(std_string)) {
+            parser::Mecab mecab;
+
             this->ui->original_text->setText(text);
+            QString mecab_text(mecab.parse(std_string).c_str());
+            this->ui->mecab_text->setText(mecab_text);
         }
     }
 }

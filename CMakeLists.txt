@@ -12,6 +12,11 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 read_version("${CMAKE_CURRENT_SOURCE_DIR}/version.pri" VER_MAJOR VER_MINOR VER_PATCH)
 
+if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    add_definitions(-DUNICODE)
+    add_definitions(-D_UNICODE)
+endif()
+
 add_definitions(-DTW_VERSION="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}")
 add_definitions(-DTW_VERSION_MAJOR=${VER_MAJOR})
 add_definitions(-DTW_VERSION_MINOR=${VER_MINOR})

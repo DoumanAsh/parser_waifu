@@ -11,4 +11,8 @@ namespace utils {
      * @retval false Otherwise
      */
     bool is_jp(const std::wstring& str);
+    /**
+     * Checks whether Japanese text is present.
+     */
+    bool is_jp(const std::string& str);
 }
