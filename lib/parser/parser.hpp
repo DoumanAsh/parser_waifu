@@ -14,6 +14,8 @@ namespace parser {
 
     /**
      * Mecab parser that wraps Mecab::Tagger
+     *
+     * Assumes utf-8
      */
     class Mecab: public Interface {
         public:
@@ -23,6 +25,5 @@ namespace parser {
 
         private:
             MeCab::Tagger *tagger;
-            int charset;
     };
 }

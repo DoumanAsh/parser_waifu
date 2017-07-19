@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 #include "about.hpp"
+#include "parser.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -27,4 +28,7 @@ private:
 
     //Child widgets
     About *about;
+
+    //Parsers
+    parser::Mecab mecab;
 };
