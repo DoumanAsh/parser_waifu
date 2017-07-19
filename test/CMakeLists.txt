@@ -9,8 +9,8 @@ add_subdirectory(${googletest_SOURCE_DIR} ${googletest_BINARY_DIR})
 
 file(GLOB_RECURSE test_SRC "*.cpp")
 add_executable(utest "${test_SRC}")
-target_link_libraries(utest ${UTILS_LIBS} gtest gtest_main)
-target_include_directories(utest PUBLIC ${UTILS_INCLUDES})
+target_link_libraries(utest mecab ${UTILS_LIBS} ${PARSER_LIBS} gtest gtest_main)
+target_include_directories(utest PUBLIC ${UTILS_INCLUDES} ${PARSER_INCLUDES})
 
 enable_testing()
 add_test(NAME all COMMAND $<TARGET_FILE:utest>)

@@ -1,0 +1,10 @@
+include_directories("${PROJECT_BINARY_DIR}")
+add_definitions(-DNDEBUG)
+add_definitions(-DVERSION="0.996")
+add_definitions(-DMECAB_DEFAULT_RC="mecabrc")
+add_definitions(-DPACKAGE="mecab")
+add_definitions(-DDIC_VERSION=102)
+add_definitions(-D_WIN32_IE=0x0900)
+add_definitions(-DMECAB_USE_THREAD -D_CRT_SECURE_NO_DEPRECATE -DHAVE_WINDOWS_H -DDLL_EXPORT -DHAVE_GETENV -DUNICODE -D_UNICODE)
+
+add_subdirectory("src/")

@@ -19,11 +19,6 @@
 #include <utility>
 #include <vector>
 
-#if defined(_MSC_VER)
-#undef sscanf
-#define sscanf sscanf_s
-#endif
-
 namespace toml {
 
 // ----------------------------------------------------------------------
@@ -841,8 +836,13 @@ inline Token Lexer::parseAsTime(const std::string& str)
 
     int n;
     int YYYY, MM, DD;
+#if defined(_MSC_VER)
+    if (sscanf_s(s, "%d-%d-%d%n", &YYYY, &MM, &DD, &n) != 3)
+        return Token(TokenType::ERROR, std::string("Invalid token"));
+#else
     if (sscanf(s, "%d-%d-%d%n", &YYYY, &MM, &DD, &n) != 3)
         return Token(TokenType::ERROR, std::string("Invalid token"));
+#endif
 
     if (s[n] == '\0') {
         std::tm t;
@@ -863,8 +863,13 @@ inline Token Lexer::parseAsTime(const std::string& str)
 
     int hh, mm;
     double ss; // double for fraction
+#if defined(_MSC_VER)
+    if (sscanf_s(s, "%d:%d:%lf%n", &hh, &mm, &ss, &n) != 3)
+        return Token(TokenType::ERROR, std::string("Invalid token"));
+#else
     if (sscanf(s, "%d:%d:%lf%n", &hh, &mm, &ss, &n) != 3)
         return Token(TokenType::ERROR, std::string("Invalid token"));
+#endif
 
     std::tm t;
     t.tm_sec = static_cast<int>(ss);
@@ -890,7 +895,7 @@ inline Token Lexer::parseAsTime(const std::string& str)
     char pn;
     int oh, om;
 #if defined(_MSC_VER)
-    if (sscanf(s, "%c%d:%d", &pn, static_cast<unsigned>(sizeof(pn)), &oh, &om) != 3)
+    if (sscanf_s(s, "%c%d:%d", &pn, static_cast<unsigned>(sizeof(pn)), &oh, &om) != 3)
         return Token(TokenType::ERROR, std::string("Invalid token"));
 #else
     if (sscanf(s, "%c%d:%d", &pn, &oh, &om) != 3)
