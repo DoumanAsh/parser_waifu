@@ -36,7 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(this->clipboard, SIGNAL(dataChanged()), this, SLOT(clipboard_change()));
 
-    this->ui->mecab_text->document()->setDefaultStyleSheet("span { background: #ccc7c7; }");
+    this->ui->mecab_text->document()->setDefaultStyleSheet("span { background: #D3D3D3; }");
+    this->clipboard_change();
 }
 
 MainWindow::~MainWindow() {
