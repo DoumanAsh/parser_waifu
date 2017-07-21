@@ -49,16 +49,25 @@ std::string Mecab::parse(const std::string& str) {
     std::regex newline("^(?!EOS)(.+)\\n"); //Look ahead to skip EOS
     const std::sregex_iterator iter_end;
     const auto flags = std::regex_constants::match_not_null;
-    for (auto line_iter = std::sregex_iterator(mecab_result.begin(), mecab_result.end(), newline, flags); line_iter != iter_end; ++line_iter)
-    {
+    for (auto line_iter = std::sregex_iterator(mecab_result.begin(), mecab_result.end(), newline, flags); line_iter != iter_end; ++line_iter) {
         static std::regex token_re("([^\\s,]+)", std::regex::ECMAScript);
+        std::ostringstream element;
+
         const auto line = line_iter->str(1);
-        for (auto token = std::sregex_iterator(line.begin(), line.end(), token_re, flags); token != iter_end; ++token) {
-            result << token->str() << " | ";
-        }
+        auto token = std::sregex_iterator(line.begin(), line.end(), token_re, flags);
+        const auto kanji = token->str();
+        ++token; //Original format
+        ++token; //Part of Speech
+        ++token; //Part of Speech 1
+        ++token; //Part of Speech 2
+        ++token; //Part of Speech 3
+        ++token; //Conjugated form
+        ++token; //Inflection
+        ++token; //Reading
 
-        result << "\n";
-
+        result << "<span title=\"" << token->str() << "\">"
+               << kanji
+               << "</span> ";
     }
 
     return result.str();

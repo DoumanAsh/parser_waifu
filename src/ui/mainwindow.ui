@@ -77,6 +77,11 @@
        </property>
        <item>
         <widget class="QTextEdit" name="mecab_text">
+         <property name="font">
+          <font>
+           <pointsize>10</pointsize>
+          </font>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>

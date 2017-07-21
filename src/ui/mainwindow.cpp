@@ -21,7 +21,7 @@ void MainWindow::clipboard_change() {
         if (utils::is_jp(std_string)) {
             this->ui->original_text->setText(text);
             QString mecab_text(this->mecab.parse(std_string).c_str());
-            this->ui->mecab_text->setText(mecab_text);
+            this->ui->mecab_text->document()->setHtml(mecab_text);
         }
     }
 }
@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     connect(this->clipboard, SIGNAL(dataChanged()), this, SLOT(clipboard_change()));
+
+    this->ui->mecab_text->document()->setDefaultStyleSheet("span { background: #ccc7c7; }");
 }
 
 MainWindow::~MainWindow() {
