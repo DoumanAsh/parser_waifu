@@ -64,8 +64,9 @@ std::string Mecab::parse(const std::string& str) {
         ++token; //Conjugated form
         ++token; //Inflection
         ++token; //Reading
+        const auto reading = token->str();
 
-        result << "<span title=\"" << token->str() << "\">"
+        result << "<span title=\"" << reading << "\">"
                << kanji
                << "</span> ";
     }

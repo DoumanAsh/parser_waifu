@@ -1,7 +1,7 @@
 #include <QGuiApplication>
 #include <QMimeData>
 
-#include "utils.hpp"
+#include <utils.hpp>
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
