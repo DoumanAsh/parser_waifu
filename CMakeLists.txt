@@ -19,6 +19,8 @@ add_definitions(-DTW_VERSION_PATCH=${VER_PATCH})
 
 project(ParserWaifu LANGUAGES CXX VERSION ${VER_MAJOR}.${VER_MINOR}.${VER_PATCH})
 
+remove_msvc_default_warning_level()
+
 ###########################
 # Compiler flags
 ##########################

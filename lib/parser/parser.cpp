@@ -51,7 +51,6 @@ std::string Mecab::parse(const std::string& str) {
     const auto flags = std::regex_constants::match_not_null;
     for (auto line_iter = std::sregex_iterator(mecab_result.begin(), mecab_result.end(), newline, flags); line_iter != iter_end; ++line_iter) {
         static std::regex token_re("([^\\s,]+)", std::regex::ECMAScript);
-        std::ostringstream element;
 
         const auto line = line_iter->str(1);
         auto token = std::sregex_iterator(line.begin(), line.end(), token_re, flags);
