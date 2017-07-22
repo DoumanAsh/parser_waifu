@@ -1,6 +1,8 @@
 #include <QGuiApplication>
+#include <QCloseEvent>
 #include <QMimeData>
 
+#include "../app/config.hpp"
 #include <utils.hpp>
 
 #include "mainwindow.hpp"
@@ -26,18 +28,33 @@ void MainWindow::clipboard_change() {
     }
 }
 
+void MainWindow::restoreUi() {
+    this->restoreGeometry(this->settings.value("ui/geometry").toByteArray());
+    this->restoreState(this->settings.value("ui/windowState").toByteArray());
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    settings(app::config::get_path(), QSettings::IniFormat),
     clipboard(QGuiApplication::clipboard()),
     about(new About(this))
 {
     ui->setupUi(this);
 
-    connect(this->clipboard, SIGNAL(dataChanged()), this, SLOT(clipboard_change()));
+    this->restoreUi();
 
     this->ui->mecab_text->document()->setDefaultStyleSheet("span { background: #D3D3D3; }");
     this->clipboard_change();
+
+    connect(this->clipboard, SIGNAL(dataChanged()), this, SLOT(clipboard_change()));
+}
+
+void MainWindow::closeEvent(QCloseEvent* event) {
+    this->settings.setValue("ui/geometry", this->saveGeometry());
+    this->settings.setValue("ui/windowState", this->saveState());
+
+    event->accept();
 }
 
 MainWindow::~MainWindow() {

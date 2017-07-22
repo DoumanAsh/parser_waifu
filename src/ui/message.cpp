@@ -7,13 +7,28 @@ Pop& Pop::title(const std::string& title) {
     return *this;
 }
 
+Pop& Pop::title(const QString& title) {
+    inner.setWindowTitle(title);
+    return *this;
+}
+
 Pop& Pop::text(const std::string& text) {
     inner.setText(QString::fromStdString(text));
     return *this;
 }
 
+Pop& Pop::text(const QString& text) {
+    inner.setText(text);
+    return *this;
+}
+
 Pop& Pop::details(const std::string& text) {
     inner.setInformativeText(QString::fromStdString(text));
+    return *this;
+}
+
+Pop& Pop::details(const QString& text) {
+    inner.setInformativeText(text);
     return *this;
 }
 

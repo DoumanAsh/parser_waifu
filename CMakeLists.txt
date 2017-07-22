@@ -39,6 +39,11 @@ endif()
 set_output_dir("${CMAKE_BINARY_DIR}/dist")
 
 ###########################
+# Boost
+##########################
+#lazy_find_boost(FileSystem)
+
+###########################
 # 3PP
 ##########################
 add_subdirectory("3pp/")

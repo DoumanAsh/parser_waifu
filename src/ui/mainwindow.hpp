@@ -1,5 +1,6 @@
 #pragma once
 #include <QClipboard>
+#include <QSettings>
 
 #include <QMainWindow>
 
@@ -16,15 +17,24 @@ class MainWindow : public QMainWindow {
 private slots:
     void on_actionAbout_triggered();
     void clipboard_change();
+    void closeEvent(QCloseEvent* event) override;
 
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
 private:
+    /**
+     * Restores UI state from settings.
+     */
+    void restoreUi();
+
+private:
     Ui::MainWindow *ui;
 
     QClipboard *clipboard;
+
+    QSettings settings;
 
     //Child widgets
     About *about;
