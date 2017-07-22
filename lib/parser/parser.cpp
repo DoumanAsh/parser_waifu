@@ -19,6 +19,10 @@ Mecab::~Mecab() {
     this->tagger = 0;
 }
 
+std::string Mecab::dict_path() const {
+    return std::string(this->tagger->dictionary_info()->filename);
+}
+
 /**
  * Parses by Mecab.
  *

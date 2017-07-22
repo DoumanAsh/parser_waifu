@@ -29,6 +29,7 @@ void MainWindow::clipboard_change() {
 }
 
 void MainWindow::restoreUi() {
+    this->ui->setupUi(this);
     this->restoreGeometry(this->settings.value("ui/geometry").toByteArray());
     this->restoreState(this->settings.value("ui/windowState").toByteArray());
 }
@@ -40,10 +41,10 @@ MainWindow::MainWindow(QWidget *parent) :
     clipboard(QGuiApplication::clipboard()),
     about(new About(this))
 {
-    ui->setupUi(this);
-
     this->restoreUi();
 
+    //TODO: We should be able to allow user to load it.
+    this->settings.setValue("mecab/dictionary", QString::fromStdString(this->mecab.dict_path()));
     this->ui->mecab_text->document()->setDefaultStyleSheet("span { background: #D3D3D3; }");
     this->clipboard_change();
 
