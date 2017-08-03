@@ -3,7 +3,6 @@
 #include <QMimeData>
 
 #include "../app/config.hpp"
-#include <utils.hpp>
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
@@ -17,23 +16,24 @@ void MainWindow::on_actionAbout_triggered() {
 void MainWindow::process_text(QString text) {
     auto std_string = text.toStdString();
 
-    if (utils::is_jp(std_string)) {
-        this->ui->original_text->setText(text);
-        QString mecab_text(this->mecab.parse(std_string).c_str());
-        this->ui->mecab_text->document()->setHtml(mecab_text);
-    }
+    this->ui->original_text->setText(text);
+    QString mecab_text(this->mecab.parse(std_string).c_str());
+    this->ui->mecab_text->document()->setHtml(mecab_text);
 }
 
 void MainWindow::clipboard_change() {
+    static QRegExp jp_re(u8"[\u3000-\u303F]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\uFF00-\uFFEF]|[\u4E00-\u9FAF]");
     auto mime = this->clipboard->mimeData();
 
     if (mime->hasText()) {
         auto text = mime->text();
-        //It might be a better idea to just have worker thread
-        this->parser_timer->stop();
-        connect(this->parser_timer, &QTimer::timeout, this, [this, text] () {this->process_text(text);});
-        //TODO: will make time configurable
-        this->parser_timer->start(0);
+        if (jp_re.indexIn(text) != -1) {
+            //It might be a better idea to just have worker thread
+            this->parser_timer->stop();
+            connect(this->parser_timer, &QTimer::timeout, this, [this, text] () {this->process_text(text);});
+            //TODO: will make time configurable
+            this->parser_timer->start(0);
+        }
     }
 }
 
