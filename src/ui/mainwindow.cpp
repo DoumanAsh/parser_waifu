@@ -7,10 +7,21 @@
 
 #include "mainwindow.hpp"
 #include "ui_mainwindow.h"
+#include "styles.hpp"
 
 void MainWindow::on_actionAbout_triggered() {
     this->about->activateWindow();
     this->about->show();
+}
+
+void MainWindow::process_text(QString text) {
+    auto std_string = text.toStdString();
+
+    if (utils::is_jp(std_string)) {
+        this->ui->original_text->setText(text);
+        QString mecab_text(this->mecab.parse(std_string).c_str());
+        this->ui->mecab_text->document()->setHtml(mecab_text);
+    }
 }
 
 void MainWindow::clipboard_change() {
@@ -18,13 +29,11 @@ void MainWindow::clipboard_change() {
 
     if (mime->hasText()) {
         auto text = mime->text();
-
-        auto std_string = text.toStdString();
-        if (utils::is_jp(std_string)) {
-            this->ui->original_text->setText(text);
-            QString mecab_text(this->mecab.parse(std_string).c_str());
-            this->ui->mecab_text->document()->setHtml(mecab_text);
-        }
+        //It might be a better idea to just have worker thread
+        this->parser_timer->stop();
+        connect(this->parser_timer, &QTimer::timeout, this, [this, text] () {this->process_text(text);});
+        //TODO: will make time configurable
+        this->parser_timer->start(0);
     }
 }
 
@@ -39,16 +48,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     settings(app::config::get_path(), QSettings::IniFormat),
     clipboard(QGuiApplication::clipboard()),
-    about(new About(this))
+    about(new About(this)),
+    parser_timer(new QTimer(this))
 {
     this->restoreUi();
 
     //TODO: We should be able to allow user to load it.
     this->settings.setValue("mecab/dictionary", QString::fromStdString(this->mecab.dict_path()));
-    this->ui->mecab_text->document()->setDefaultStyleSheet("span { background: #D3D3D3; }");
+    this->ui->mecab_text->document()->setDefaultStyleSheet(styles::MECAB_CSS);
     this->clipboard_change();
 
-    connect(this->clipboard, SIGNAL(dataChanged()), this, SLOT(clipboard_change()));
+    this->parser_timer->setSingleShot(true);
+
+    connect(this->clipboard, &QClipboard::dataChanged, this, &MainWindow::clipboard_change);
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {

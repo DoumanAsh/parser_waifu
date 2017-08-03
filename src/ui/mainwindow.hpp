@@ -1,6 +1,7 @@
 #pragma once
 #include <QClipboard>
 #include <QSettings>
+#include <QTimer>
 
 #include <QMainWindow>
 
@@ -16,6 +17,7 @@ class MainWindow : public QMainWindow {
 
 private slots:
     void on_actionAbout_triggered();
+    void process_text(QString text);
     void clipboard_change();
     void closeEvent(QCloseEvent* event) override;
 
@@ -35,6 +37,9 @@ private:
     QClipboard *clipboard;
 
     QSettings settings;
+
+    //Timers
+    QTimer *parser_timer;
 
     //Child widgets
     About *about;
