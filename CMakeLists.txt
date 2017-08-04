@@ -10,12 +10,13 @@ include(QtUtils)
 # Generates compile_commands.json
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-read_version("${CMAKE_CURRENT_SOURCE_DIR}/version.pri" VER_MAJOR VER_MINOR VER_PATCH)
-
-add_definitions(-DTW_VERSION="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}")
+set(VER_MAJOR 0)
+set(VER_MINOR 1)
+set(VER_PATCH 0)
 add_definitions(-DTW_VERSION_MAJOR=${VER_MAJOR})
 add_definitions(-DTW_VERSION_MINOR=${VER_MINOR})
 add_definitions(-DTW_VERSION_PATCH=${VER_PATCH})
+add_definitions(-DTW_VERSION="${VER_MAJOR}.${VER_MINOR}.${VER_PATCH}")
 
 project(ParserWaifu LANGUAGES CXX VERSION ${VER_MAJOR}.${VER_MINOR}.${VER_PATCH})
 
@@ -81,7 +82,7 @@ add_custom_target(
     --enable=all
     --force
     -I "${CMAKE_CURRENT_SOURCE_DIR}/src/"
-    -I ${UTILS_INCLUDES}
     -I ${PARSER_INCLUDES}
+    --suppress=unusedFunction:*:*
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )

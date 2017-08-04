@@ -50,19 +50,3 @@ macro(install_qt5_libs target dest)
         )
     endif()
 endmacro(install_qt5_libs)
-
-function(read_version priFile outMajor outMinor outPatch)
-    file(STRINGS ${priFile} _priFileContents REGEX "^VER_.+")
-    set(_regex "VER_MAJOR += +([0-9]+);VER_MINOR += +([0-9]+);VER_PATCH += +([0-9]+)")
-     # note quotes around _regex, they are needed because the variable contains semicolons
-    string(REGEX MATCH "${_regex}" _tmp "${_priFileContents}")
-    if (NOT _tmp)
-        message(FATAL_ERROR "Could not detect project version number from ${priFile}")
-    endif()
-
-    # message(STATUS "Matched version string: ${_tmp}")
-
-    set(${outMajor} ${CMAKE_MATCH_1} PARENT_SCOPE)
-    set(${outMinor} ${CMAKE_MATCH_2} PARENT_SCOPE)
-    set(${outPatch} ${CMAKE_MATCH_3} PARENT_SCOPE)
-endfunction()
