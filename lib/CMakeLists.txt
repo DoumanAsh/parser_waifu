@@ -1,3 +1,5 @@
+set(INT_LIBS_INCLUDE "${CMAKE_CURRENT_SOURCE_DIR}" PARENT_SCOPE)
+
 #########
 # utils
 #########
@@ -11,8 +13,6 @@
 #########
 # parser
 #########
-set(PARSER_INCLUDES "${CMAKE_CURRENT_SOURCE_DIR}/parser" PARENT_SCOPE)
-
 file(GLOB parser_SRC "parser/*.cpp")
 add_library(pw_parser STATIC ${parser_SRC})
 target_include_directories(pw_parser PUBLIC ${3PP_INCLUDES})

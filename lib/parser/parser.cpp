@@ -2,6 +2,7 @@
 #include <sstream>
 #include <regex>
 
+#include "internal.hpp"
 #include "parser.hpp"
 
 using namespace parser;
@@ -24,7 +25,7 @@ std::string Mecab::dict_path() const {
 }
 
 /**
- * Parses by Mecab.
+ * Parses Mecab output.
  *
  * Its format:
  * Original Form\t
@@ -58,7 +59,7 @@ std::string Mecab::parse(const std::string& str) {
 
         const auto line = line_iter->str(1);
         auto token = std::sregex_iterator(line.begin(), line.end(), token_re, flags);
-        const auto kanji = token->str();
+        const auto kanji = internal::escape_html(token->str());
         ++token; //Original format
         ++token; //Part of Speech
         ++token; //Part of Speech 1
@@ -67,11 +68,17 @@ std::string Mecab::parse(const std::string& str) {
         ++token; //Conjugated form
         ++token; //Inflection
         ++token; //Reading
-        const auto reading = token->str();
 
-        result << "<span title=\"" << reading << "\">"
-               << kanji
-               << "</span> ";
+        if (token != iter_end) {
+            const auto reading = token->str();
+
+            result << "<span title=\"" << reading << "\">"
+                   << kanji
+                   << "</span> ";
+        }
+        else {
+            result << kanji << " ";
+        }
     }
 
     return result.str();

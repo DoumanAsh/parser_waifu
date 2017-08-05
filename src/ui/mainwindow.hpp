@@ -6,7 +6,7 @@
 #include <QMainWindow>
 
 #include "about.hpp"
-#include "parser.hpp"
+#include "parser/parser.hpp"
 
 namespace Ui {
     class MainWindow;

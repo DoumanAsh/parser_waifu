@@ -16,6 +16,6 @@ file(GLOB ui_SRC "ui/*.cpp")
 
 add_executable(pw WIN32 ${main_SRC} ${app_SRC} ${ui_SRC} ${UI_HEADERS})
 target_link_libraries(pw ${UTILS_LIBS} ${PARSER_LIBS} ${Boost_LIBRARIES} Qt5::Widgets Qt5::Core)
-target_include_directories(pw PUBLIC ${3PP_INCLUDES} ${UTILS_INCLUDES} ${PARSER_INCLUDES})
+target_include_directories(pw PUBLIC ${3PP_INCLUDES} ${INT_LIBS_INCLUDE})
 
 install_qt5_libs(pw "${CMAKE_BINARY_DIR}/dist/bin")
