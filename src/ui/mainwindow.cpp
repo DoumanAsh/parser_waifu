@@ -2,6 +2,7 @@
 #include <QCloseEvent>
 #include <QMimeData>
 
+#include "../utils/jp.hpp"
 #include "../app/config.hpp"
 
 #include "mainwindow.hpp"
@@ -22,12 +23,11 @@ void MainWindow::process_text(QString text) {
 }
 
 void MainWindow::clipboard_change() {
-    static QRegExp jp_re(u8"[\u3000-\u303F]|[\u3040-\u309F]|[\u30A0-\u30FF]|[\uFF00-\uFFEF]|[\u4E00-\u9FAF]");
     auto mime = this->clipboard->mimeData();
 
     if (mime->hasText()) {
         auto text = mime->text();
-        if (jp_re.indexIn(text) != -1) {
+        if (utils::jp::has_jp(text)) {
             //It might be a better idea to just have worker thread
             this->parser_timer->stop();
             connect(this->parser_timer, &QTimer::timeout, this, [this, text] () {this->process_text(text);});

@@ -82,7 +82,7 @@ add_custom_target(
     --enable=all
     --force
     -I "${CMAKE_CURRENT_SOURCE_DIR}/src/"
-    -I ${PARSER_INCLUDES}
+    -I ${INT_LIBS_INCLUDE}
     --suppress=unusedFunction:*:*
     ${CMAKE_CURRENT_SOURCE_DIR}/src/ ${CMAKE_CURRENT_SOURCE_DIR}/lib
 )
