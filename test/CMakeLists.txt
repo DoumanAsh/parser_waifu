@@ -1,4 +1,10 @@
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+#Workaround for https://github.com/google/googletest/issues/1111
+if (WIN32)
+    add_definitions(-DGTEST_LANG_CXX11=1)
+endif()
+
 include(DownloadProject)
 download_project(
     PROJ googletest

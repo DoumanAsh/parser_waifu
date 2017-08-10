@@ -18,7 +18,8 @@ void MainWindow::process_text(QString text) {
     auto std_string = text.toStdString();
 
     this->ui->original_text->setText(text);
-    QString mecab_text(this->mecab.parse(std_string).c_str());
+    const auto mecab_result = this->mecab.parse(std_string);
+    QString mecab_text(mecab_result.to_string().c_str());
     this->ui->mecab_text->document()->setHtml(mecab_text);
 }
 

@@ -52,7 +52,7 @@ add_subdirectory("3pp/")
 ###########################
 # Max compile warnings for own code only
 ##########################
-set_msvc_flags_if("/W4")
+set_msvc_flags_if("/W4 /std:c++latest /source-charset:utf-8")
 set_gcc_flags_if("-Wall -Wextra")
 
 ###########################

@@ -5,7 +5,55 @@
 #include "internal.hpp"
 #include "parser.hpp"
 
+////////////////////////////////
+//Parse result
+////////////////////////////////
+namespace parser {
+    Kanji::Kanji(const std::string& text) :
+        text(std::move(text)),
+        reading(std::nullopt)
+    {
+    }
+
+    Kanji::Kanji(const std::string& text, const std::string& reading) :
+        text(std::move(text)),
+        reading(std::move(reading))
+    {
+    }
+
+    std::ostream& operator<<(std::ostream &out, const Kanji &kanji) {
+        if (kanji.reading.has_value()) {
+            return out << "<span title=\"" << *(kanji.reading) << "\">"
+                       << kanji.text
+                       << "</span>";
+        }
+        else {
+            return out << kanji.text;
+        }
+    }
+
+    std::ostream& operator<<(std::ostream &out, const Result &result) {
+        for (auto kanji : result.inner) {
+            out << kanji << " ";
+        }
+
+        return out;
+    }
+
+    std::string Result::to_string() const {
+        std::ostringstream result;
+
+        result << *this;
+
+        return result.str();
+    }
+}
+
 using namespace parser;
+
+////////////////////////////////
+//Mecab
+////////////////////////////////
 
 Mecab::Mecab() : tagger(MeCab::createTagger("")) {
     if (this->tagger == nullptr) throw std::runtime_error("Unable to create Mecab Tagger!");
@@ -41,7 +89,7 @@ std::string Mecab::dict_path() const {
  * @param[in] str Japanese string.
  * @returns String with result
  */
-std::string Mecab::parse(const std::string& str) {
+Result Mecab::parse(const std::string& str) {
     const auto result_ptr = this->tagger->parse(str.c_str(), str.size());
 
     //It should be unlikely I suppose so let it be an excpetion.
@@ -49,8 +97,7 @@ std::string Mecab::parse(const std::string& str) {
 
     const std::string mecab_result(result_ptr);
 
-    //TODO: Prepare a proper output in HTML i suppose
-    std::ostringstream result;
+    Result result;
     std::regex newline("^(?!EOS)(.+)\\n"); //Look ahead to skip EOS
     const std::sregex_iterator iter_end;
     const auto flags = std::regex_constants::match_not_null;
@@ -72,14 +119,12 @@ std::string Mecab::parse(const std::string& str) {
         if (token != iter_end) {
             const auto reading = token->str();
 
-            result << "<span title=\"" << reading << "\">"
-                   << kanji
-                   << "</span> ";
+            result.emplace_back(kanji, reading);
         }
         else {
-            result << kanji << " ";
+            result.emplace_back(kanji);
         }
     }
 
-    return result.str();
+    return result;
 }
